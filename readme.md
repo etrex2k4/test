@@ -1,16 +1,32 @@
-# Node.js Express TypeScript Project
+# Node.js Express TypeScript Project with TypeORM
 
-A simple Node.js Express server written in TypeScript with a Hello World endpoint.
+A Node.js Express server written in TypeScript with TypeORM integration for MariaDB/MySQL database operations.
+
+## Features
+
+- Express.js web server
+- TypeScript for type safety
+- TypeORM for database operations
+- MariaDB/MySQL database support
+- User and Character entities with 1:N relationship
 
 ## Getting Started
 
 ### Prerequisites
 - Node.js (v20 or higher)
 - npm
+- MariaDB or MySQL database
 
 ### Installation
 ```bash
 npm install
+```
+
+### Database Setup
+1. Create a MariaDB/MySQL database named `test_db` (or customize in environment variables)
+2. Copy `.env.example` to `.env` and update database credentials if needed
+```bash
+cp .env.example .env
 ```
 
 ### Development
@@ -28,20 +44,56 @@ npm start
 
 ## Endpoints
 
+### General
 - `GET /` - Server status
 - `GET /hello` - Returns "Hello World" with dummy data
 
-### Example Response from `/hello`:
-```json
-{
-  "message": "Hello World",
-  "timestamp": "2025-06-26T17:18:15.750Z",
-  "data": {
-    "id": 1,
-    "name": "Dummy User",
-    "status": "active"
-  }
-}
+### Users
+- `GET /users` - Get all users with their characters
+- `POST /users` - Create a new user
+
+### Characters  
+- `GET /characters` - Get all characters with their user
+- `POST /characters` - Create a new character
+
+### Example Usage
+
+Create a user:
+```bash
+curl -X POST http://localhost:3000/users \
+  -H "Content-Type: application/json" \
+  -d '{"name": "John Doe", "email": "john@example.com"}'
 ```
+
+Create a character for a user:
+```bash
+curl -X POST http://localhost:3000/characters \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Warrior", "level": 10, "characterClass": "Fighter", "user": {"id": 1}}'
+```
+
+## Database Schema
+
+### User Table
+- `id` (Primary Key, Auto-increment)
+- `name` (String)
+- `email` (String, Unique)
+- `isActive` (Boolean, default: true)
+
+### Character Table
+- `id` (Primary Key, Auto-increment)
+- `name` (String)
+- `level` (Number, nullable)
+- `characterClass` (String, nullable)
+- `user` (Foreign Key to User)
+
+## Environment Variables
+
+- `DB_HOST` - Database host (default: localhost)
+- `DB_PORT` - Database port (default: 3306)
+- `DB_USERNAME` - Database username (default: root)
+- `DB_PASSWORD` - Database password (default: empty)
+- `DB_DATABASE` - Database name (default: test_db)
+- `PORT` - Server port (default: 3000)
 
 The server runs on port 3000 by default.
