@@ -1,0 +1,80 @@
+<div class="dashboard-container">
+  <mat-toolbar color="primary" class="header-toolbar">
+    <mat-icon>dashboard</mat-icon>
+    <span class="spacer"></span>
+    <span class="welcome-text" *ngIf="user">Welcome, {{ user.name }}!</span>
+    <span class="spacer"></span>
+    <button mat-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </mat-toolbar>
+
+  <div class="dashboard-content">
+    <div class="dashboard-grid">
+      <mat-card class="dashboard-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>person</mat-icon>
+            User Profile
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="user-info" *ngIf="user">
+            <p><strong>Name:</strong> {{ user.name }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Status:</strong> 
+              <span [class]="user.isActive ? 'status-active' : 'status-inactive'">
+                {{ user.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="dashboard-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>sports_esports</mat-icon>
+            Characters
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Character management feature coming soon!</p>
+          <p>Here you will be able to:</p>
+          <ul>
+            <li>View your characters</li>
+            <li>Create new characters</li>
+            <li>Edit character details</li>
+            <li>Manage character levels and classes</li>
+          </ul>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="accent" disabled>
+            <mat-icon>add</mat-icon>
+            Create Character
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card class="dashboard-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>info</mat-icon>
+            Getting Started
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Welcome to the Character Management System!</p>
+          <p>This application allows you to:</p>
+          <ul>
+            <li>Manage your user profile</li>
+            <li>Create and manage game characters</li>
+            <li>Track character progression</li>
+          </ul>
+          <p>Built with Angular Material and powered by a Node.js backend.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
