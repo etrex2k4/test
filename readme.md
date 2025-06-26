@@ -9,6 +9,9 @@ A Node.js Express server written in TypeScript with TypeORM integration for Mari
 - TypeORM for database operations
 - MariaDB/MySQL database support
 - User and Character entities with 1:N relationship
+- FeatureFlag system with many-to-many Character-FeatureFlag relationships
+- Permission-based user management through feature flags
+- Protected endpoints that require specific feature flags (e.g., "userverwaltung")
 
 ## Getting Started
 
@@ -51,10 +54,20 @@ npm start
 ### Users
 - `GET /users` - Get all users with their characters
 - `POST /users` - Create a new user
+- `PUT /users/:id/block` - Block a user (requires "userverwaltung" feature flag)
+- `PUT /users/:id/unblock` - Unblock a user (requires "userverwaltung" feature flag)
+- `DELETE /users/:id` - Delete a user (requires "userverwaltung" feature flag)
 
 ### Characters  
-- `GET /characters` - Get all characters with their user
+- `GET /characters` - Get all characters with their user and feature flags
 - `POST /characters` - Create a new character
+- `GET /characters/:id/featureflags` - Get feature flags for a specific character
+- `POST /characters/:id/featureflags` - Add a feature flag to a character
+- `DELETE /characters/:id/featureflags/:flagId` - Remove a feature flag from a character
+
+### Feature Flags
+- `GET /featureflags` - Get all feature flags with their characters
+- `POST /featureflags` - Create a new feature flag
 
 ### Example Usage
 
@@ -72,6 +85,34 @@ curl -X POST http://localhost:3000/characters \
   -d '{"name": "Warrior", "level": 10, "characterClass": "Fighter", "user": {"id": 1}}'
 ```
 
+Create a feature flag:
+```bash
+curl -X POST http://localhost:3000/featureflags \
+  -H "Content-Type: application/json" \
+  -d '{"name": "userverwaltung", "description": "User management permissions"}'
+```
+
+Add a feature flag to a character:
+```bash
+curl -X POST http://localhost:3000/characters/1/featureflags \
+  -H "Content-Type: application/json" \
+  -d '{"featureFlagId": 1}'
+```
+
+Block a user (requires character with "userverwaltung" feature flag):
+```bash
+curl -X PUT http://localhost:3000/users/2/block \
+  -H "Content-Type: application/json" \
+  -d '{"characterId": 1}'
+```
+
+Delete a user (requires character with "userverwaltung" feature flag):
+```bash
+curl -X DELETE http://localhost:3000/users/2 \
+  -H "Content-Type: application/json" \
+  -d '{"characterId": 1}'
+```
+
 ## Database Schema
 
 ### User Table
@@ -86,6 +127,15 @@ curl -X POST http://localhost:3000/characters \
 - `level` (Number, nullable)
 - `characterClass` (String, nullable)
 - `user` (Foreign Key to User)
+
+### FeatureFlag Table
+- `id` (Primary Key, Auto-increment)
+- `name` (String, Unique)
+- `description` (String, nullable)
+
+### Character_FeatureFlag Junction Table
+- `characterId` (Foreign Key to Character)
+- `featureFlagId` (Foreign Key to FeatureFlag)
 
 ## Environment Variables
 
