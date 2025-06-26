@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { User } from './entity/User';
 import { Character } from './entity/Character';
+import { FeatureFlag } from './entity/FeatureFlag';
 
 export const AppDataSource = new DataSource({
   type: 'mysql',
@@ -12,7 +13,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_DATABASE || 'test_db',
   synchronize: true, // In production, use migrations instead
   logging: false,
-  entities: [User, Character],
+  entities: [User, Character, FeatureFlag],
   migrations: [],
   subscribers: [],
 });
